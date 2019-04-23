@@ -16,6 +16,7 @@ func main() {
 	// TRAVIS_TOKEN
 	// GITHUB_REPO
 	// BRANCH
+	// DRY_RUN
 
 	port, ok := os.LookupEnv("PORT")
 
@@ -38,16 +39,18 @@ func main() {
 	r := gin.Default()
 
 	r.POST("/:hook", func(c *gin.Context) {
-		var h string
+		var h struct {
+			Hook string `uri:"hook" binding:"required"`
+		}
 		if err := c.ShouldBindUri(&h); err != nil {
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
-		if builder, ok := hookBuilders[h]; ok {
+		if builder, ok := hookBuilders[h.Hook]; ok {
 			s.HandleRequest(c, builder)
 		} else {
 			c.AbortWithStatus(http.StatusNotFound)
-			log.Printf("no hook for url: %v\n", c.Request.RequestURI)
+			log.Printf("no hook for hook %s, url: %v\n", h.Hook, c.Request.RequestURI)
 		}
 	})
 

@@ -73,15 +73,15 @@ func (t *hooker) Hook(c hook.Callback) error {
 }
 
 func sendRequest(req *http.Request, c hook.Callback) {
-	log.Printf("Send request to uri: %s\n", req.RequestURI)
+	log.Printf("Send request to uri: %s\n", req.URL)
 
 	dryRun, _ := os.LookupEnv("DRY_RUN")
 	if dryRun == "true" {
-		log.Printf("DEBUG: %s %s\n", req.Method, req.RequestURI)
+		log.Printf("DEBUG: %s %s\n", req.Method, req.URL)
 		for k, v := range req.Header {
 			log.Printf("DEBUG: HEADER %s: %s", k, v)
 		}
-		c.OnSuccess("dry run success")
+		c.OnSuccess("dry run successful")
 		return
 	}
 
