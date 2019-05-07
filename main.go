@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/feng-zh/slack-webhook-hub/hook"
+	"github.com/feng-zh/slack-webhook-hub/hook/github"
 	"github.com/feng-zh/slack-webhook-hub/hook/travis"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -25,7 +26,10 @@ func main() {
 		port = "8080"
 	}
 
-	hookBuilders := map[string]hook.Builder{"travis": new(travis.Travis)}
+	hookBuilders := map[string]hook.Builder{
+		"travis": new(travis.Travis),
+		"github": new(github.Github),
+	}
 
 	var slackTokens []string
 	if slackToken, ok := os.LookupEnv("SLACK_TOKEN"); ok {
