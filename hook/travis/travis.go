@@ -49,7 +49,7 @@ func (t *hooker) Hook(c hook.Callback) error {
 		"branch": "%s"
 	}
 }`, t.branch)
-	if req, err := http.NewRequest("POST", fmt.Sprintf("https://api.travis-ci.org/repo/%s/requests", t.repo), strings.NewReader(json)); err != nil {
+	if req, err := http.NewRequest("POST", fmt.Sprintf("https://api.travis-ci.org/repo/%s/requests", strings.ReplaceAll(t.repo, "/", "%2F")), strings.NewReader(json)); err != nil {
 		return err
 	} else {
 		req.Header.Set("Authorization", fmt.Sprintf("token %s", t.token))
